@@ -1,12 +1,15 @@
-// 客户端打包配置
+/**
+ * 客户端打包配置
+ */
 const { merge } = require('webpack-merge')
-const baseConfig = require('./webpack.base.config')
+const baseConfig = require('./webpack.base.config.js')
 const VueSSRClientPlugin = require('vue-server-renderer/client-plugin')
 
 module.exports = merge(baseConfig, {
   entry: {
     app: './src/entry-client.js'
   },
+
   module: {
     rules: [
       // ES6 转 ES5
@@ -24,16 +27,18 @@ module.exports = merge(baseConfig, {
       },
     ]
   },
-  // 重要信息 这将 webpack 运行时分离到一个引导chunk中 
-  // 以便可以在之后正确注入异步 chunk
+
+  // 重要信息：这将 webpack 运行时分离到一个引导 chunk 中，
+  // 以便可以在之后正确注入异步 chunk。
   optimization: {
     splitChunks: {
-      name: 'manifest',
+      name: "manifest",
       minChunks: Infinity
     }
   },
+
   plugins: [
-    // 此插件在输出目录中生成 `vue-ssr-client-manifest.json`
+    // 此插件在输出目录中生成 `vue-ssr-client-manifest.json`。
     new VueSSRClientPlugin()
   ]
 })
