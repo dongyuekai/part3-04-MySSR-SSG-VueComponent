@@ -6,27 +6,34 @@ const fs = require('fs')
 const express = require('express')
 const server = express()
 
-const renderer = require('vue-server-renderer').createRenderer({
-  // 将渲染内容放到模板占位处 替换 <!--vue-ssr-outlet-->
-  template: fs.readFileSync('./index.template.html', 'utf-8')
+server.use('/dist', express.static('./dist'))
+
+const serverBundle = require('./dist/vue-ssr-server-bundle.json')
+const template = fs.readFileSync('./index.template.html', 'utf-8')
+const clientManifest = require('./dist/vue-ssr-client-manifest.json')
+
+// const renderer = require('vue-server-renderer').createRenderer({
+//   // 将渲染内容放到模板占位处 替换 <!--vue-ssr-outlet-->
+//   template: fs.readFileSync('./index.template.html', 'utf-8')
+// })
+
+const renderer = require('vue-server-renderer').createBundleRenderer(serverBundle, {
+  template,
+  clientManifest
 })
 
 server.get('/', (req, res) => {
-  const app = new Vue({
-    template: `
-     <div id='app'>
-       <h1> {{ message }} </h1>
-     </div>
-  `,
-    data: {
-      message: 'LG-Hello'
-    }
-  })
-  renderer.renderToString(app, (err, html) => {
+  renderer.renderToString({
+    title: 'LG',
+    meta: `
+      <meta name="description" content="LG-Hello">
+    `
+  }, (err, html) => {
+    console.log(err)
     if (err) {
       return res.status(500).end('Internal Server Error.')
     }
-    res.setHeader('Content-Type', 'text/html;charset=u')
+    res.setHeader('Content-Type', 'text/html;charset=utf8')
     res.end(html)
   })
 })
