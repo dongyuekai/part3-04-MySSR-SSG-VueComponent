@@ -8,7 +8,7 @@ const axios = require('axios')
 module.exports = function (api) {
 
 
-  // 添加集合
+  // 查询数据 添加到集合collection 可以通过GraphQl查询
   api.loadSource(async actions => {
     const collection = actions.addCollection('Post')
 
