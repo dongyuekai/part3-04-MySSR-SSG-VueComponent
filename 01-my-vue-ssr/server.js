@@ -1,28 +1,17 @@
-// 通过vue-server-renderer将一个vue实例渲染成字符串
-// node server.js 会输出  <div id="app" data-server-rendered="true"><h1> LG-Hello </h1></div> 实现了渲染
-
-const Vue = require('vue')
-const fs = require('fs')
 const express = require('express')
+const fs = require('fs')
+const { createBundleRenderer } = require('vue-server-renderer')
+const setupDevServer = require('./build/setup-dev-server')
+
 const server = express()
+
+// express.static 处理的物理磁盘中的资源
+server.use('/dist', express.static('./dist'))
 
 const isProd = process.env.NODE_ENV === 'production'
 
-const { createBundleRenderer } = require('vue-server-renderer')
-
-const { setupDevServer } = require('./build/setup-dev-server')
-
-server.use('/dist', express.static('./dist'))
-
-
-// const renderer = require('vue-server-renderer').createRenderer({
-//   // 将渲染内容放到模板占位处 替换 <!--vue-ssr-outlet-->
-//   template: fs.readFileSync('./index.template.html', 'utf-8')
-// })
-
 let renderer
 let onReady
-
 if (isProd) {
   const serverBundle = require('./dist/vue-ssr-server-bundle.json')
   const template = fs.readFileSync('./index.template.html', 'utf-8')
@@ -32,7 +21,7 @@ if (isProd) {
     clientManifest
   })
 } else {
-  // 开发模式 -> 监视打包构建 -> 重新生成Renderer渲染器
+  // 开发模式 -> 监视打包构建 -> 重新生成 Renderer 渲染器
   onReady = setupDevServer(server, (serverBundle, template, clientManifest) => {
     renderer = createBundleRenderer(serverBundle, {
       template,
@@ -41,33 +30,32 @@ if (isProd) {
   })
 }
 
-
-const render = (req, res) => {
-  renderer.renderToString({
-    title: 'LG',
-    meta: `
-      <meta name="description" content="LG-Hello">
-    `
-  }, (err, html) => {
-    console.log(err)
-    if (err) {
-      return res.status(500).end('Internal Server Error.')
-    }
-    res.setHeader('Content-Type', 'text/html;charset=utf8')
+const render = async (req, res) => {
+  try {
+    const html = await renderer.renderToString({
+      title: '拉勾教育',
+      meta: `
+        <meta name="description" content="拉勾教育">
+      `,
+      url: req.url
+    })
+    res.setHeader('Content-Type', 'text/html; charset=utf8')
     res.end(html)
-  })
+  } catch (err) {
+    res.status(500).end('Internal Server Error.')
+  }
 }
 
-server.get('/', isProd
+// 服务端路由设置为 *，意味着所有的路由都会进入这里
+server.get('*', isProd
   ? render
   : async (req, res) => {
-    // 等待有了Renderer渲染器之后 调用render进行渲染
+    // 等待有了 Renderer 渲染器以后，调用 render 进行渲染
     await onReady
-    render()
-  })
+    render(req, res)
+  }
+)
 
 server.listen(3000, () => {
-  console.log('server running at port 3000...')
+  console.log('server running at port 3000.')
 })
-
-
