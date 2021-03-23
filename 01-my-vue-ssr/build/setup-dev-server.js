@@ -3,6 +3,7 @@ const path = require('path')
 const chokidir = require('chokidar')
 const webpack = require('webpack')
 const devMiddleware = require('webpack-dev-middleware')
+const hotMiddleware = require('webpack-hot-middleware')
 const resolve = file => path.resolve(__dirname, file)
 
 module.exports = (server, callback) => {
@@ -42,7 +43,6 @@ module.exports = (server, callback) => {
       // 内存中读取
       serverDevMiddleware.fileSystem.readFileSync(resolve("../dist/vue-ssr-server-bundle.json"), 'utf-8')
     )
-    console.log(serverBundle)
     update()
   })
   // serverCompiler.watch({}, (err, stats) => {
@@ -51,12 +51,17 @@ module.exports = (server, callback) => {
   //   // 此时会在dist目录打包生成vue-ssr-server-bundle.json
   //   // 读取此文件 重新更新Renderer
   //   serverBundle = JSON.parse(fs.readFileSync(resolve("../dist/vue-ssr-server-bundle.json"), 'utf-8'))
-  //   console.log(serverBundle)
   //   update()
   // })
 
   // 客户端构建 监视构建 clientManifest -> 调用 update -> 更新 Renderer 渲染器
   const clientConfig = require('./webpack.client.config')
+  clientConfig.plugins.push(new webpack.HotModuleReplacementPlugin())
+  clientConfig.entry.app = [
+    'webpack-hot-middleware/client?quiet=true&reload=true', // 和服务端交互处理热更新的一个客户端脚本
+    clientConfig.entry.app
+  ]
+  clientConfig.output.filename = '[name].js' // 热更新模式下确保一直的hash
   const clientCompiler = webpack(clientConfig)
   // 写入内存
   const clientDevMiddleware = devMiddleware(clientCompiler, {
@@ -69,9 +74,12 @@ module.exports = (server, callback) => {
       // 内存中读取
       clientDevMiddleware.fileSystem.readFileSync(resolve("../dist/vue-ssr-client-manifest.json"), 'utf-8')
     )
-    console.log(clientManifest)
     update()
   })
+
+  server.use(hotMiddleware(clientCompiler, {
+    log: false //关闭本身的日志输出
+  }))
 
   // 将clientDevMiddleware 挂载到Express服务中 提供对内存中数据的访问 
   server.use(clientDevMiddleware)
