@@ -12,5 +12,11 @@ module.exports = function (api) {
 
   api.createPages(({ createPage }) => {
     // Use the Pages API here: https://gridsome.org/docs/pages-api/
+
+    // 动态创建路由规则
+    createPage({
+      path: '/my-page',
+      component: './src/templates/MyPage.vue'
+    })
   })
 }
