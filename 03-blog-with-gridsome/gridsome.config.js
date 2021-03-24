@@ -31,5 +31,14 @@ module.exports = {
         // }
       }
     }
-  ]
+  ],
+  templates: {
+    // StrapiPost是collection的类型
+    StrapiPost: [
+      {
+        path: '/post/:id',
+        component: './src/templates/Post.vue'
+      }
+    ]
+  }
 }

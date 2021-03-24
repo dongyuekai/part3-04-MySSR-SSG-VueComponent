@@ -24,11 +24,11 @@
             v-for="edge in $page.posts.edges"
             :key="edge.node.id"
           >
-            <a href="post.html">
+            <g-link :to="'/post/' + edge.node.id">
               <h2 class="post-title">
                 {{ edge.node.title }}
               </h2>
-            </a>
+            </g-link>
             <p class="post-meta">
               Posted by
               <a href="#">Start Bootstrap</a>
@@ -44,7 +44,7 @@
             <hr />
           </div>
           <!-- Pager 分页 -->
-          <Pager :info="$page.posts.pageInfo"/>
+          <Pager :info="$page.posts.pageInfo" />
         </div>
       </div>
     </div>
