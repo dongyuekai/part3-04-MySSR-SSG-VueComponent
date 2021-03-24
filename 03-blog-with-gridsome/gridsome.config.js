@@ -19,7 +19,8 @@ module.exports = {
       // 通过插件可以读取strapi平台的数据（本地需要运行项目在1337端口）  预取数据 供graphql查询
       use: '@gridsome/source-strapi',
       options: {
-        apiURL: 'http://localhost:1337',
+        // apiURL: 'http://localhost:1337',
+        apiURL: process.env.GRIDSOME_API_URL,
         queryLimit: 1000, // Defaults to 100
         contentTypes: ['post', 'tag'],
         singleTypes: ['gernal'], //拿 general变量的值

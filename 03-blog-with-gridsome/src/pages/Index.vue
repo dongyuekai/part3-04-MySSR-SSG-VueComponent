@@ -4,7 +4,9 @@
     <header
       class="masthead"
       :style="{
-        backgroundImage: `url(http://localhost:1337${$page.gernals.edges[0].node.conver.url})`,
+        backgroundImage: `url(${
+          GRIDSOME_API_URL + $page.gernals.edges[0].node.conver.url
+        })`,
       }"
     >
       <div class="overlay"></div>

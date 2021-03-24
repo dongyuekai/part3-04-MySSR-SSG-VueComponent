@@ -4,7 +4,7 @@
     <header
       class="masthead"
       :style="{
-        backgroundImage: `url(http://localhost:1337${$page.post.conver.url})`,
+        backgroundImage: `url(${GRIDSOME_API_URL + $page.post.conver.url})`,
       }"
     >
       <div class="overlay"></div>
@@ -28,8 +28,10 @@
     <article>
       <div class="container">
         <div class="row">
-          <div class="col-lg-8 col-md-10 mx-auto" v-html="mdToHtml($page.post.content)">
-          </div>
+          <div
+            class="col-lg-8 col-md-10 mx-auto"
+            v-html="mdToHtml($page.post.content)"
+          ></div>
         </div>
       </div>
     </article>
