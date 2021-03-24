@@ -8,11 +8,27 @@ module.exports = {
   siteName: 'Gridsome',
   plugins: [
     {
-      // 通过插件可以读取本地md文件 供graphql查询
+      // 通过插件可以读取本地md文件 预取数据 供graphql查询
       use: '@gridsome/source-filesystem',
       options: {
         typeName: 'BlogPost',
         path: './content/blog/**/*.md',
+      }
+    },
+    {
+      // 通过插件可以读取strapi平台的数据（本地需要运行项目在1337端口）  预取数据 供graphql查询
+      use: '@gridsome/source-strapi',
+      options: {
+        apiURL: 'http://localhost:1337',
+        queryLimit: 1000, // Defaults to 100
+        contentTypes: ['post'],
+        // singleTypes: ['impressum'],
+        // Possibility to login with a Strapi user,
+        // when content types are not publicly available (optional).
+        // loginData: {
+        //   identifier: '',
+        //   password: ''
+        // }
       }
     }
   ]

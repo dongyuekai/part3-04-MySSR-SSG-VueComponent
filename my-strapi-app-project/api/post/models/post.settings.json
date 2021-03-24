@@ -12,12 +12,29 @@
   "attributes": {
     "title": {
       "type": "string",
-      "required": true,
-      "unique": true
+      "required": true
     },
     "content": {
       "type": "richtext",
       "required": true
+    },
+    "conver": {
+      "model": "file",
+      "via": "related",
+      "allowedTypes": [
+        "images"
+      ],
+      "plugin": "upload",
+      "required": false
+    },
+    "is_publish": {
+      "type": "boolean",
+      "default": false,
+      "required": true
+    },
+    "tags": {
+      "via": "posts",
+      "collection": "tag"
     }
   }
 }
