@@ -40,6 +40,7 @@
                   id="name"
                   required
                   data-validation-required-message="Please enter your name."
+                  v-model="form.name"
                 />
                 <p class="help-block text-danger"></p>
               </div>
@@ -54,6 +55,7 @@
                   id="email"
                   required
                   data-validation-required-message="Please enter your email address."
+                  v-model="form.email"
                 />
                 <p class="help-block text-danger"></p>
               </div>
@@ -70,6 +72,7 @@
                   id="phone"
                   required
                   data-validation-required-message="Please enter your phone number."
+                  v-model="form.phone"
                 />
                 <p class="help-block text-danger"></p>
               </div>
@@ -84,6 +87,7 @@
                   id="message"
                   required
                   data-validation-required-message="Please enter a message."
+                  v-model="form.message"
                 ></textarea>
                 <p class="help-block text-danger"></p>
               </div>
@@ -94,6 +98,7 @@
               type="submit"
               class="btn btn-primary"
               id="sendMessageButton"
+              @click.prevent="onSubmit"
             >
               Send
             </button>
@@ -105,7 +110,30 @@
 </template>
 
 <script>
-export default {};
+import axios from "axios";
+
+export default {
+  name: "ContactPage",
+  data() {
+    return {
+      form: {
+        name: "",
+        email: "",
+        phone: "",
+        message: "",
+      },
+    };
+  },
+  methods: {
+    async onSubmit() {
+      await axios({
+        method: 'POST',
+        url:'http://localhost:1337/contacts',
+        data:this.form
+      })
+    },
+  },
+};
 </script>
 
 <style lang="scss" scoped>
