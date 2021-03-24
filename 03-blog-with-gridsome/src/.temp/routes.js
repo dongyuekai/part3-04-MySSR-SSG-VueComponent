@@ -24,7 +24,7 @@ export default [
   },
   {
     name: "home",
-    path: "/",
+    path: "/:page(\\d+)?/",
     component: c5
   },
   {

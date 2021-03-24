@@ -36,26 +36,27 @@
             </p>
             <p>
               <span v-for="tag in edge.node.tags" :key="tag.id">
-                <a href="">{{ tag.title }}</a><br/>
+                <a href="">{{ tag.title }}</a
+                ><br />
               </span>
             </p>
 
             <hr />
           </div>
-          <!-- Pager -->
-          <div class="clearfix">
-            <a class="btn btn-primary float-right" href="#"
-              >Older Posts &rarr;</a
-            >
-          </div>
+          <!-- Pager 分页 -->
+          <Pager :info="$page.posts.pageInfo"/>
         </div>
       </div>
     </div>
   </Layout>
 </template>
 <page-query>
-query {
-  posts:allStrapiPost{
+query($page: Int) {
+  posts:allStrapiPost(perPage:2,page:$page) @paginate{
+    pageInfo {
+      totalPages
+      currentPage
+    }
     edges{
       node{
         id
@@ -64,17 +65,20 @@ query {
           id
           title
         }
-        created_at
       }
     }
   }
 }
 </page-query>
 <script>
+import { Pager } from "gridsome";
 export default {
   name: "HomePage",
   metaInfo: {
     title: "Hello, world!",
+  },
+  components: {
+    Pager,
   },
 };
 </script>
