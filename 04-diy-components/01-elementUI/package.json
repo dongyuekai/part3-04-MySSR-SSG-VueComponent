@@ -8,7 +8,10 @@
   },
   "main": "index.js",
   "dependencies": {
-    "element-ui": "^2.4.5"
+    "async-validator": "^3.5.1",
+    "element-ui": "^2.4.5",
+    "sass-loader": "^11.0.1",
+    "vue-style-loader": "^4.1.3"
   },
   "devDependencies": {
     "babel-plugin-component": "^1.1.1",
