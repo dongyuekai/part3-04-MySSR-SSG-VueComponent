@@ -8,7 +8,7 @@
 
 <script>
 export default {
-  name: "lgButton",
+  name: "LgButton",
   methods: {
     handleClick(evt) {
       debugger
