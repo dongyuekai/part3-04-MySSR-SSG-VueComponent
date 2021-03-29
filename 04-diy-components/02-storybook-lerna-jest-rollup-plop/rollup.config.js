@@ -6,7 +6,7 @@ import postcss from 'rollup-plugin-postcss'
 import { terser } from 'rollup-plugin-terser'
 import { nodeResolve } from '@rollup/plugin-node-resolve'
 
-const isEnv = process.env.NODE_ENV !== 'production'
+const isDev = process.env.NODE_ENV !== 'production'
 
 // 公共插件配置
 const plugins = [
@@ -27,7 +27,7 @@ const plugins = [
 isDev || plugins.push(terser())
 // packages 文件夹路径
 const root = path.resolve(__dirname, 'packages')
-modules.exports =
+module.exports =
   fs.readdirSync(root)
     // 过滤 只保留文件夹
     .filter(item => fs.statSync(path.resolve(root, item)).isDirectory())
