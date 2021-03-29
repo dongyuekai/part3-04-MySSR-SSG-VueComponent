@@ -1,4 +1,8 @@
 {
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
   "name": "02-storybook",
   "version": "1.0.0",
   "main": "index.js",
@@ -10,6 +14,7 @@
     "@storybook/addon-links": "^6.1.21",
     "@storybook/vue": "^6.1.21",
     "babel-loader": "^8.2.2",
+    "lerna": "^4.0.0",
     "vue-loader": "^15.9.6",
     "vue-template-compiler": "^2.6.12"
   },
@@ -18,6 +23,7 @@
   },
   "scripts": {
     "storybook": "start-storybook -p 6006",
-    "build-storybook": "build-storybook"
+    "build-storybook": "build-storybook",
+    "lerna": "lerna publish"
   }
 }
